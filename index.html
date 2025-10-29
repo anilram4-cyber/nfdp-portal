@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>NFDP Tumsar Cloud Portal – v17</title>
+<meta name="description" content="NFDP – Nano Finance Development Program (Tumsar Unit). Clean bilingual portal with secure login UI and DVC watermark." />
+<link rel="icon" href="favicon.ico" />
+<style>
+  body { margin:0; font-family: Arial, sans-serif; background: linear-gradient(135deg,#117B55,#2A63B7); color:#fff; }
+  .wrap { max-width:960px; margin:0 auto; padding:40px 18px; }
+  .card { background: rgba(255,255,255,0.08); border-radius:16px; padding:24px; box-shadow: 0 6px 22px rgba(0,0,0,0.18);}
+  h1 { margin:0 0 6px 0; font-size: 24px; }
+  .sub { opacity: 0.9; margin:4px 0 18px 0; }
+  .row { display:flex; gap:12px; flex-wrap: wrap; }
+  .input { flex:1; min-width:260px; }
+  input { width:100%; padding:12px 14px; border-radius:12px; border:none; }
+  button { padding:12px 18px; border:none; border-radius:12px; cursor:pointer; }
+  .primary { background:#ffffff; color:#113; font-weight:bold; }
+  .link { background:transparent; color:#fff; text-decoration:underline; }
+  .footer { text-align:center; margin-top:18px; font-size: 12px; opacity: 0.9; }
+  .top { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+  .toggle { background:#fff; color:#123; padding:6px 10px; border-radius:10px; font-size:12px; cursor:pointer; }
+  .seal { position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); opacity:0.12; font-weight:bold; letter-spacing:1px; text-align:center; pointer-events:none; }
+  .seal .big { font-size:22px; }
+  .seal .small { font-size:12px; }
+</style>
+</head>
+<body>
+<div class="seal">
+  <div class="big">OFFICIAL NFDP TUMSAR EDITION 2025</div>
+  <div class="small">Verified by NFDP Cloud Portal System • DVC–TUM2025–001</div>
+</div>
+<div class="wrap">
+  <div class="top">
+    <div>
+      <div style="font-weight:bold;">NFDP – Nano Finance Development Program (Tumsar Unit)</div>
+      <div class="sub">“Small Savings, Big Confidence” • Empowering Every Member through Smart Finance</div>
+    </div>
+    <div class="toggle" onclick="toggleLang()"><span id="langLabel">MR</span> / EN</div>
+  </div>
+  <div class="card">
+    <h1 id="welcome">स्वागत प्रशासक — कृपया सुरक्षितपणे लॉगिन करा.</h1>
+    <div class="row">
+      <div class="input"><input id="email" placeholder="ईमेल (anilram4@gmail.com)"></div>
+      <div class="input"><input id="pass" type="password" placeholder="पासवर्ड"></div>
+    </div>
+    <div style="margin-top:14px;">
+      <button class="primary" onclick="alert('Demo only — backend binding pending')">Login</button>
+      <button class="link" onclick="alert('Forgot Password: OTP to anilram4@gmail.com')">Forgot Password?</button>
+    </div>
+    <div style="margin-top:18px;">
+      <div id="help">मदत हवी आहे? NFDP Support — Email: anilram4@gmail.com • WhatsApp: +91 8698398865</div>
+    </div>
+  </div>
+  <div class="footer">
+    Powered by R. Anil | 📞 8698398865 | NFDP Cloud Portal System (2025) • DVC–TUM2025–001
+  </div>
+</div>
+<script>
+  let mr = true;
+  function toggleLang(){
+    mr = !mr;
+    document.getElementById('langLabel').innerText = mr ? 'MR' : 'EN';
+    document.getElementById('welcome').innerText = mr ?
+      'स्वागत प्रशासक — कृपया सुरक्षितपणे लॉगिन करा.' :
+      'Welcome Admin — please login to manage NFDP Cloud Portal securely.';
+    document.getElementById('help').innerText = mr ?
+      'मदत हवी आहे? NFDP Support — Email: anilram4@gmail.com • WhatsApp: +91 8698398865' :
+      'Need help? Contact NFDP Support — Email: anilram4@gmail.com • WhatsApp: +91 8698398865';
+    document.getElementById('email').placeholder = mr ? 'ईमेल (anilram4@gmail.com)' : 'Email (anilram4@gmail.com)';
+    document.getElementById('pass').placeholder = mr ? 'पासवर्ड' : 'Password';
+  }
+</script>
+</body>
+</html>

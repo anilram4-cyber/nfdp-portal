@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>NFDP — DVC Verification</title>
+<style>
+  body{margin:0;font-family:Arial, sans-serif;background:linear-gradient(135deg,#117B55,#2A63B7);color:#fff}
+  .wrap{max-width:760px;margin:0 auto;padding:36px 16px}
+  .card{background:rgba(255,255,255,0.08);border-radius:16px;padding:22px;box-shadow:0 6px 22px rgba(0,0,0,.18)}
+  h1{margin:0 0 10px 0;font-size:22px}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  input{flex:1;min-width:220px;padding:12px 14px;border:none;border-radius:12px}
+  button{padding:12px 18px;border:none;border-radius:12px;cursor:pointer}
+  .primary{background:#fff;color:#123;font-weight:bold}
+  .muted{opacity:.9;margin-top:10px}
+  .result{margin-top:16px;padding:14px;border-radius:12px;background:rgba(0,0,0,.18)}
+  .ok{border:1px solid #8ae6a0}
+  .bad{border:1px solid #ffc4c4}
+  a{color:#fff;text-decoration:underline}
+  .footer{margin-top:18px;text-align:center;opacity:.9;font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>NFDP — Document Verification (DVC)</h1>
+    <div class="muted">Enter your Digital Verification Code to validate official NFDP documents.</div>
+    <div class="row" style="margin-top:12px;">
+      <input id="code" placeholder="e.g., DVC–TUM2025–001" />
+      <button class="primary" onclick="verify()">Verify</button>
+    </div>
+    <div id="out" class="result" style="display:none"></div>
+    <div class="muted" style="margin-top:12px;">
+      Need help? <a href="mailto:anilram4@gmail.com">anilram4@gmail.com</a> • WhatsApp: +91 8698398865"
+    </div>
+  </div>
+  <div class="footer">
+    Powered by R. Anil | NFDP Cloud Portal System (2025)
+  </div>
+</div>
+<script>
+  const LIST = {
+    "DVC–TUM2025–001": {"title":"NFDP Brochure (Tumsar Unit, 2025 Edition)","status":"Verified","issued":"2025-10-29"}
+  };
+  function verify(){
+    const el = document.getElementById('code');
+    const out = document.getElementById('out');
+    const k = (el.value||'').trim();
+    if(!k){ out.style.display='block'; out.className='result bad'; out.innerText='Please enter a DVC code.'; return; }
+    if(LIST[k]){
+      const r = LIST[k];
+      out.style.display='block'; out.className='result ok';
+      out.innerHTML = '✅ <b>'+k+'</b> — '+r.status+'<br>'+
+                      'Title: '+r.title+'<br>'+
+                      'Issued: '+r.issued+'<br>'+
+                      'This code matches our official records.';
+    } else {
+      out.style.display='block'; out.className='result bad';
+      out.innerHTML = '❌ <b>'+k+'</b> — Not found.<br>Please check the code and try again.';
+    }
+  }
+</script>
+</body>
+</html>

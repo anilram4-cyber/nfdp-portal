@@ -20,51 +20,79 @@
 <div class="wrap">
   <div class="card">
     <h1>Forgot Password — One Time Password (OTP)</h1>
-    <div class="muted">Enter your registered email to receive an OTP.</div>
     <input id="email" placeholder="Email (e.g., anilram4@gmail.com)" />
     <button class="primary" onclick="send()">Send OTP</button>
 
     <div id="otpBlock" style="display:none;">
-      <div class="muted">Enter the OTP sent to your email. Valid for 10 minutes.</div>
+      <div class="muted">Enter the OTP sent to your email.</div>
       <input id="otp" placeholder="6-digit OTP" />
-      <button class="primary" onclick="reset()">Verify & Reset Password</button>
+      <button class="primary" onclick="verify()">Verify OTP</button>
+    </div>
+
+    <div id="resetBlock" style="display:none;">
+      <div class="muted">Enter a new password</div>
+      <input id="newpass" placeholder="New password" type="password" />
+      <button class="primary" onclick="reset()">Reset Password</button>
     </div>
   </div>
   <div class="footer">
-    Subject: <i>Your NFDP One-Time Password (OTP)</i> • Support: anilram4@gmail.com • WhatsApp: +91 8698398865
+    NFDP Cloud Portal • Support: anilram4@gmail.com • WhatsApp: +91 8698398865
   </div>
 </div>
 
 <script>
-  // Replace with your latest /exec URL after re-deploy
-  const API_URL = "https://script.google.com/macros/s/AKfycbxrTkcgYh_1g4Ysa6oeneMcW5bqacFBkW7MBpwkYDdOVkjpK_lmzh3bCpIrN4G1qt5w6Q/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbzCXkI1sm_lgljm94J0SPV5fSusgkcBfqmdiM4YDdwC7D_UuCKZ9IdwkxPeYDU-v44wUg/exec";
 
   async function send(){
-    const email = (document.getElementById('email').value||'').trim();
-    if(!email) return alert('Please enter your email');
+    const email = get("email").trim();
+    if(!email) return alert("Please enter your email");
+    await fetch(API_URL, {
+      method:"POST", headers:{'Content-Type':'text/plain'},
+      body: JSON.stringify({ email })
+    });
+    alert("✅ OTP sent! Please check your inbox.");
+    show("otpBlock");
+  }
 
-    // Fire-and-forget: no-cors (preflight नाही; response वाचत नाही)
-    try {
-      await fetch(API_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ email })
-      });
-
-      // UI feedback
-      alert("✅ OTP request sent. Please check your inbox: " + email);
-      document.getElementById('otpBlock').style.display='block';
-    } catch (err) {
-      alert("Connection Error: " + err);
+  async function verify(){
+    const email = get("email").trim();
+    const otp = get("otp").trim();
+    if(!otp) return alert("Enter OTP");
+    const res = await fetch(API_URL, {
+      method:"POST", headers:{'Content-Type':'text/plain'},
+      body: JSON.stringify({ email, otp })
+    });
+    const d = await res.json();
+    if(d.status === "verified"){
+      alert("✅ OTP verified!");
+      hide("otpBlock"); show("resetBlock");
+    } else {
+      alert("❌ " + d.message);
     }
   }
 
-  function reset(){
-    const code = (document.getElementById('otp').value||'').trim();
-    if(!code) return alert('Enter OTP');
-    alert('✅ OTP verified successfully! You can now set a new password.');
+  async function reset(){
+    const email = get("email").trim();
+    const otp = get("otp").trim();
+    const newPassword = get("newpass").trim();
+    if(!newPassword) return alert("Enter new password");
+    const res = await fetch(API_URL, {
+      method:"POST", headers:{'Content-Type':'text/plain'},
+      body: JSON.stringify({ email, otp, newPassword })
+    });
+    const d = await res.json();
+    if(d.status === "reset"){
+      alert("🎉 Password reset successfully!");
+      window.location.href = "index.html";
+    } else {
+      alert("❌ " + d.message);
+    }
   }
+
+  // Helper
+  const get = id => document.getElementById(id).value;
+  const show = id => document.getElementById(id).style.display = 'block';
+  const hide = id => document.getElementById(id).style.display = 'none';
 </script>
 </body>
 </html>

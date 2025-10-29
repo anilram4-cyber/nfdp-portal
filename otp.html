@@ -36,7 +36,7 @@
 </div>
 
 <script>
-  // Your Apps Script Web App URL (after re-deploy with CORS headers)
+  // Use the latest /exec URL after re-deploy
   const API_URL = "https://script.google.com/macros/s/AKfycbxrTkcgYh_1g4Ysa6oeneMcW5bqacFBkW7MBpwkYDdOVkjpK_lmzh3bCpIrN4G1qt5w6Q/exec";
 
   async function send(){
@@ -44,32 +44,25 @@
     if(!email) return alert('Please enter your email');
 
     try {
-      // Try normal CORS first (requires Apps Script to return CORS headers)
+      // IMPORTANT: text/plain avoids CORS preflight
       const res = await fetch(API_URL, {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({email})
+        headers: {'Content-Type': 'text/plain;charset=utf-8'},
+        body: JSON.stringify({ email })
       });
+
+      // Try to parse JSON (Apps Script returns JSON string)
       const data = await res.json().catch(()=>null);
 
       if (data && data.status === "success") {
         alert("✅ OTP has been sent successfully to " + email);
         document.getElementById('otpBlock').style.display='block';
-        console.log("Your OTP:", data.otp);
-        return;
+        // console.log("OTP (debug):", data.otp);  // (optional) remove in production
+      } else {
+        // If parsing failed or status not success, still inform user to check inbox
+        alert("OTP request sent. Please check your inbox: " + email);
+        document.getElementById('otpBlock').style.display='block';
       }
-
-      // If normal path fails or no JSON, fall back to no-cors (fire-and-forget)
-      await fetch(API_URL, {
-        method: 'POST',
-        mode: 'no-cors', // will send request; response unreadable
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({email})
-      });
-
-      alert("✅ OTP request sent. Please check your inbox: " + email);
-      document.getElementById('otpBlock').style.display='block';
-
     } catch (err) {
       alert("Connection Error: " + err);
     }

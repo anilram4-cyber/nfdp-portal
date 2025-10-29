@@ -36,33 +36,25 @@
 </div>
 
 <script>
-  // Use the latest /exec URL after re-deploy
+  // Replace with your latest /exec URL after re-deploy
   const API_URL = "https://script.google.com/macros/s/AKfycbxrTkcgYh_1g4Ysa6oeneMcW5bqacFBkW7MBpwkYDdOVkjpK_lmzh3bCpIrN4G1qt5w6Q/exec";
 
   async function send(){
     const email = (document.getElementById('email').value||'').trim();
     if(!email) return alert('Please enter your email');
 
+    // Fire-and-forget: no-cors (preflight नाही; response वाचत नाही)
     try {
-      // IMPORTANT: text/plain avoids CORS preflight
-      const res = await fetch(API_URL, {
+      await fetch(API_URL, {
         method: 'POST',
-        headers: {'Content-Type': 'text/plain;charset=utf-8'},
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ email })
       });
 
-      // Try to parse JSON (Apps Script returns JSON string)
-      const data = await res.json().catch(()=>null);
-
-      if (data && data.status === "success") {
-        alert("✅ OTP has been sent successfully to " + email);
-        document.getElementById('otpBlock').style.display='block';
-        // console.log("OTP (debug):", data.otp);  // (optional) remove in production
-      } else {
-        // If parsing failed or status not success, still inform user to check inbox
-        alert("OTP request sent. Please check your inbox: " + email);
-        document.getElementById('otpBlock').style.display='block';
-      }
+      // UI feedback
+      alert("✅ OTP request sent. Please check your inbox: " + email);
+      document.getElementById('otpBlock').style.display='block';
     } catch (err) {
       alert("Connection Error: " + err);
     }
